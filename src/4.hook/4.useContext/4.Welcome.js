@@ -25,7 +25,8 @@ export default function Welcome() {
 
 function WelcomePanel() {
     //context에서 currentuser를 가져온다.
-    const currentUser = useContext(CurrentUserContext)
+    //구조분해 할당이므로 currentUser는 {}로 감싼다.
+    const {currentUser} = useContext(CurrentUserContext)
 
     return (
         <Panel title='welcome'>
@@ -35,6 +36,7 @@ function WelcomePanel() {
 }
 
 function Panel({title, children}) {
+    //평범한 할당이므로 theme는 {}가 필요없다.
     const theme = useContext(ThemeContext)
     const className = 'panel-' + theme
 
@@ -46,3 +48,51 @@ function Panel({title, children}) {
     )
 }
 
+function Greeting() {
+    const {currentUser} = useContext(CurrentUserContext)
+    return <p>you logged in as {currentUser.username}</p>
+}
+
+function LoginForm() {
+    //setter를 이용해 currentuser 정보를 greeting에 넘긴다.
+    const {setCurrentUser} = useContext(CurrentUserContext)
+    const [firstName, setFirstName] = useState('')
+    const [lastName, setLastName] = useState('')
+    const isVal = firstName && lastName
+
+    return (
+        <>
+            <label>
+                first name{': '}
+                <input required
+                    value={firstName}
+                    onChange={e => setFirstName(e.target.value)}/>
+            </label><br/>
+            <label>
+                last name{': '}
+                <input required
+                    value={lastName}
+                    onChange={e => setLastName(e.target.value)}/>
+            </label><br/>
+            <Button disabled={!isVal}
+                onClick={() => setCurrentUser({
+                    username: firstName + ' ' + lastName
+                })}>
+                log in
+            </Button>
+        </>
+    )
+}
+
+function Button({disabled, onClick, children}) {
+    const theme = useContext(ThemeContext)
+    const className = 'button-' + theme
+
+    return (
+        <button className={className}
+            disabled={disabled}
+            onClick={onClick}>
+            {children}
+        </button>
+    )
+}

@@ -1,4 +1,4 @@
-import Main from './4.useContext/3.Welcome'
+import Main from './5.useReducer/Age'
 
 export default function App() {
     return <Main/>
